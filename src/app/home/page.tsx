@@ -8,7 +8,7 @@ import { getGreeting, getTimeOfDay, getNoMealMessage, getSpecialFoodMessage, wee
 import BottomNav from '@/components/ui/BottomNav'
 import AuthGuard from '@/components/ui/AuthGuard'
 import { format, addDays } from 'date-fns'
-import { Flame, Beef, Wheat, Droplets, CalendarDays, ChevronRight, Zap } from 'lucide-react'
+import { Flame, Beef, Wheat, Droplets, CalendarDays, ChevronRight, Zap, CheckCircle, AlertCircle } from 'lucide-react'
 import type { MealPlanEntry, Meal } from '@/lib/types'
 import Image from 'next/image'
 
@@ -58,13 +58,17 @@ export default function HomePage() {
       })
   }, [activeUser, today, tomorrow])
 
-  // Calorie totals
-  const todayCalories = todayEntries.reduce((s, e) => s + (e.meal?.calories ?? 0), 0)
-  const todayProtein = todayEntries.reduce((s, e) => s + (e.meal?.protein ?? 0), 0)
-  const todayCarbs = todayEntries.reduce((s, e) => s + (e.meal?.carbs ?? 0), 0)
-  const todayFat = todayEntries.reduce((s, e) => s + (e.meal?.fat ?? 0), 0)
+  // Calorie totals (adjusted for portion)
+  const todayCalories = todayEntries.reduce((s, e) => s + (e.meal?.calories ?? 0) * (e.portion ?? 1.0), 0)
+  const todayProtein = todayEntries.reduce((s, e) => s + (e.meal?.protein ?? 0) * (e.portion ?? 1.0), 0)
+  const todayCarbs = todayEntries.reduce((s, e) => s + (e.meal?.carbs ?? 0) * (e.portion ?? 1.0), 0)
+  const todayFat = todayEntries.reduce((s, e) => s + (e.meal?.fat ?? 0) * (e.portion ?? 1.0), 0)
   const calorieTarget = 1150
+  const proteinTarget = 60
   const caloriePercent = Math.min((todayCalories / calorieTarget) * 100, 100)
+  const proteinPercent = Math.min((todayProtein / proteinTarget) * 100, 100)
+  const proteinMet = todayProtein >= proteinTarget
+  const hasMealsToday = todayEntries.length > 0
 
   // Week stats
   const plannedDays = new Set(weekEntries.map(e => e.plan_date)).size
@@ -90,7 +94,7 @@ export default function HomePage() {
             alt="Shobhit & Vidhi"
             fill
             className="object-cover object-center"
-            style={{ transform: 'rotate(90deg) scale(1.6)', transformOrigin: 'center' }}
+            style={{ transform: 'rotate(-90deg) scale(1.6)', transformOrigin: 'center' }}
             priority
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-[#0f1f0f]" />
@@ -148,17 +152,59 @@ export default function HomePage() {
 
             {/* Macros */}
             <div className="grid grid-cols-3 gap-2">
-              {[
-                { label: 'Protein', value: todayProtein, unit: 'g', icon: <Beef size={11} className="text-red-400" /> },
-                { label: 'Carbs', value: todayCarbs, unit: 'g', icon: <Wheat size={11} className="text-yellow-400" /> },
-                { label: 'Fat', value: todayFat, unit: 'g', icon: <Droplets size={11} className="text-blue-400" /> },
-              ].map(({ label, value, unit, icon }) => (
-                <div key={label} className="bg-[#0f1f0f]/60 rounded-xl p-2.5 text-center">
-                  <div className="flex items-center justify-center gap-1 mb-0.5">{icon}<span className="text-gray-500 text-xs">{label}</span></div>
-                  <p className="text-white text-sm font-semibold">{Math.round(value)}{unit}</p>
+              <div className="bg-[#0f1f0f]/60 rounded-xl p-2.5 text-center">
+                <div className="flex items-center justify-center gap-1 mb-0.5">
+                  <Beef size={11} className="text-red-400" />
+                  <span className="text-gray-500 text-xs">Protein</span>
+                  {hasMealsToday && (proteinMet
+                    ? <CheckCircle size={10} className="text-green-400" />
+                    : <AlertCircle size={10} className="text-amber-400" />
+                  )}
                 </div>
-              ))}
+                <p className="text-white text-sm font-semibold">{Math.round(todayProtein)}g</p>
+                <p className="text-gray-600 text-xs">/{proteinTarget}g</p>
+              </div>
+              <div className="bg-[#0f1f0f]/60 rounded-xl p-2.5 text-center">
+                <div className="flex items-center justify-center gap-1 mb-0.5">
+                  <Wheat size={11} className="text-yellow-400" />
+                  <span className="text-gray-500 text-xs">Carbs</span>
+                </div>
+                <p className="text-white text-sm font-semibold">{Math.round(todayCarbs)}g</p>
+              </div>
+              <div className="bg-[#0f1f0f]/60 rounded-xl p-2.5 text-center">
+                <div className="flex items-center justify-center gap-1 mb-0.5">
+                  <Droplets size={11} className="text-blue-400" />
+                  <span className="text-gray-500 text-xs">Fat</span>
+                </div>
+                <p className="text-white text-sm font-semibold">{Math.round(todayFat)}g</p>
+              </div>
             </div>
+
+            {/* Protein status callout */}
+            {hasMealsToday && (
+              <div className={`mt-2 flex items-center gap-2 px-3 py-2 rounded-xl text-xs ${
+                proteinMet
+                  ? 'bg-green-900/30 border border-green-700/40'
+                  : 'bg-amber-900/20 border border-amber-700/30'
+              }`}>
+                {proteinMet ? (
+                  <>
+                    <CheckCircle size={13} className="text-green-400 shrink-0" />
+                    <span className="text-green-300">Protein goal met! {Math.round(todayProtein)}g / {proteinTarget}g</span>
+                  </>
+                ) : (
+                  <>
+                    <AlertCircle size={13} className="text-amber-400 shrink-0" />
+                    <div className="flex-1">
+                      <span className="text-amber-300">{Math.round(proteinTarget - todayProtein)}g more protein needed</span>
+                      <div className="h-1 bg-amber-900/50 rounded-full mt-1">
+                        <div className="h-full bg-amber-500 rounded-full" style={{ width: `${proteinPercent}%` }} />
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Today's meals */}
@@ -194,7 +240,7 @@ export default function HomePage() {
                     </div>
                     {hasItems && items[0].meal?.calories && (
                       <span className="text-gray-500 text-xs mt-1">
-                        {items.reduce((s, e) => s + (e.meal?.calories ?? 0), 0)} kcal
+                        {Math.round(items.reduce((s, e) => s + (e.meal?.calories ?? 0) * (e.portion ?? 1.0), 0))} kcal
                       </span>
                     )}
                   </div>

@@ -9,6 +9,15 @@ import MealPicker from './MealPicker'
 import { ChevronLeft, ChevronRight, Share2, Plus, Flame, X, RefreshCw } from 'lucide-react'
 
 const MEAL_TYPES: MealType[] = ['breakfast', 'lunch', 'dinner', 'snack']
+const PORTION_STEPS = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0]
+function nextPortion(current: number | null): number {
+  const idx = PORTION_STEPS.findIndex(s => s === (current ?? 1.0))
+  return PORTION_STEPS[(idx + 1) % PORTION_STEPS.length]
+}
+function portionLabel(p: number | null): string {
+  const v = p ?? 1.0
+  return v === 1.0 ? '×1' : `×${v}`
+}
 const MEAL_TYPE_EMOJI: Record<MealType, string> = {
   breakfast: '🌅',
   lunch: '☀️',
@@ -90,6 +99,7 @@ export default function WeeklyPlanner({ meals, initialEntries }: WeeklyPlannerPr
           custom_meal_name: customName ?? null,
           notes: null,
           item_order: nextOrder,
+          portion: 1.0,
         })
         .select('*, meal:meals(*)')
         .single()
@@ -101,6 +111,12 @@ export default function WeeklyPlanner({ meals, initialEntries }: WeeklyPlannerPr
 
     setPickerOpen(false)
     setPickerTarget(null)
+  }
+
+  async function handleUpdatePortion(entry: MealPlanEntry) {
+    const newPortion = nextPortion(entry.portion)
+    await supabase.from('meal_plan').update({ portion: newPortion }).eq('id', entry.id)
+    setEntries(prev => prev.map(e => e.id === entry.id ? { ...e, portion: newPortion } : e))
   }
 
   function openReplace(entry: MealPlanEntry) {
@@ -116,7 +132,7 @@ export default function WeeklyPlanner({ meals, initialEntries }: WeeklyPlannerPr
 
   function getDayCalories(date: Date): number {
     return MEAL_TYPES.flatMap(mt => getSlotEntries(date, mt))
-      .reduce((sum, entry) => sum + (entry.meal?.calories ?? 0), 0)
+      .reduce((sum, entry) => sum + (entry.meal?.calories ?? 0) * (entry.portion ?? 1.0), 0)
   }
 
   function handleShareWeek() {
@@ -232,34 +248,58 @@ export default function WeeklyPlanner({ meals, initialEntries }: WeeklyPlannerPr
                         </button>
                       ) : (
                         <div className="space-y-1.5 pl-7">
-                          {slotEntries.map(entry => (
-                            <div key={entry.id} className="flex items-center justify-between gap-2">
-                              <div className="min-w-0 flex-1">
-                                <span className="text-sm font-medium text-white truncate block">
-                                  {getItemName(entry)}
-                                </span>
-                                {entry.meal?.calories && (
-                                  <span className="text-xs text-gray-500">{entry.meal.calories} kcal</span>
-                                )}
+                          {slotEntries.map(entry => {
+                            const portion = entry.portion ?? 1.0
+                            const adjustedCal = entry.meal?.calories
+                              ? Math.round(entry.meal.calories * portion)
+                              : null
+                            return (
+                              <div key={entry.id} className="flex items-center justify-between gap-2">
+                                <div className="min-w-0 flex-1">
+                                  <span className="text-sm font-medium text-white truncate block">
+                                    {getItemName(entry)}
+                                  </span>
+                                  {entry.meal?.calories && (
+                                    <span className="text-xs text-gray-500">
+                                      {adjustedCal} kcal
+                                      {portion !== 1.0 && (
+                                        <span className="text-gray-600"> ({entry.meal.calories}×{portion})</span>
+                                      )}
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="flex gap-1 shrink-0 items-center">
+                                  {entry.meal && (
+                                    <button
+                                      onClick={() => handleUpdatePortion(entry)}
+                                      title="Tap to change portion"
+                                      className={`text-xs px-1.5 py-0.5 rounded-md font-medium transition-colors ${
+                                        portion !== 1.0
+                                          ? 'bg-green-700/50 text-green-300 hover:bg-green-700'
+                                          : 'bg-green-900/40 text-gray-400 hover:text-green-400 hover:bg-green-900/60'
+                                      }`}
+                                    >
+                                      {portionLabel(entry.portion)}
+                                    </button>
+                                  )}
+                                  <button
+                                    onClick={() => openReplace(entry)}
+                                    title="Swap meal"
+                                    className="p-1.5 rounded-lg text-gray-500 hover:text-green-500 hover:bg-green-900/30 transition-colors"
+                                  >
+                                    <RefreshCw size={12} />
+                                  </button>
+                                  <button
+                                    onClick={() => handleRemoveEntry(entry)}
+                                    title="Remove"
+                                    className="p-1.5 rounded-lg text-gray-500 hover:text-red-400 hover:bg-red-50 transition-colors"
+                                  >
+                                    <X size={12} />
+                                  </button>
+                                </div>
                               </div>
-                              <div className="flex gap-1 shrink-0">
-                                <button
-                                  onClick={() => openReplace(entry)}
-                                  title="Swap meal"
-                                  className="p-1.5 rounded-lg text-gray-500 hover:text-green-500 hover:bg-green-900/30 transition-colors"
-                                >
-                                  <RefreshCw size={12} />
-                                </button>
-                                <button
-                                  onClick={() => handleRemoveEntry(entry)}
-                                  title="Remove"
-                                  className="p-1.5 rounded-lg text-gray-500 hover:text-red-400 hover:bg-red-50 transition-colors"
-                                >
-                                  <X size={12} />
-                                </button>
-                              </div>
-                            </div>
-                          ))}
+                            )
+                          })}
                         </div>
                       )}
                     </div>

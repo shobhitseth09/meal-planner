@@ -40,6 +40,7 @@ export interface MealPlanEntry {
   custom_meal_name: string | null
   notes: string | null
   item_order: number
+  portion: number | null
   meal?: Meal
 }
 
