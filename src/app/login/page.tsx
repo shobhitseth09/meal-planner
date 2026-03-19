@@ -46,7 +46,7 @@ export default function LoginPage() {
           alt="Shobhit & Vidhi"
           fill
           className="object-cover object-top"
-          style={{ transform: 'rotate(-90deg) scale(1.5)', transformOrigin: 'center' }}
+          style={{ transform: 'scale(1.0)', transformOrigin: 'center' }}
           priority
         />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0f1f0f]/40 to-[#0f1f0f]" />

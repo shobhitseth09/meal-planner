@@ -94,7 +94,7 @@ export default function HomePage() {
             alt="Shobhit & Vidhi"
             fill
             className="object-cover object-center"
-            style={{ transform: 'rotate(-90deg) scale(1.6)', transformOrigin: 'center' }}
+            style={{ transform: 'scale(1.0)', transformOrigin: 'center' }}
             priority
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-[#0f1f0f]" />
