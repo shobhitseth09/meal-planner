@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase'
-import Navbar from '@/components/ui/Navbar'
+import BottomNav from '@/components/ui/BottomNav'
 import AuthGuard from '@/components/ui/AuthGuard'
 import WeeklyPlanner from '@/components/planner/WeeklyPlanner'
 import { startOfWeek, endOfWeek, format } from 'date-fns'
@@ -33,17 +33,17 @@ export default function PlannerPage() {
 
   return (
     <AuthGuard>
-      <div className="min-h-screen">
-        <Navbar />
-        <main className="max-w-4xl mx-auto px-4 py-6">
+      <div className="min-h-screen bg-[#0f1f0f] pb-24">
+        <div className="max-w-4xl mx-auto px-4 py-6">
           {loading ? (
             <div className="flex items-center justify-center py-20">
-              <p className="text-gray-400 text-sm">Loading your plan...</p>
+              <p className="text-gray-500 text-sm">Loading your plan...</p>
             </div>
           ) : (
             <WeeklyPlanner meals={meals} initialEntries={entries} />
           )}
-        </main>
+        </div>
+        <BottomNav />
       </div>
     </AuthGuard>
   )

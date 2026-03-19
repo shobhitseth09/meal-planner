@@ -10,7 +10,7 @@ export default function Home() {
   useEffect(() => {
     const supabase = createClient()
     supabase.auth.getSession().then(({ data: { session } }) => {
-      router.push(session ? '/planner' : '/login')
+      router.push(session ? '/home' : '/login')
     })
   }, [router])
 

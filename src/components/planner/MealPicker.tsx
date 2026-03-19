@@ -113,7 +113,7 @@ export default function MealPicker({ meals, mealType, existingEntries, onAdd, on
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <p className="text-sm text-gray-500">
-          Add to <span className="font-medium text-gray-700">{MEAL_TYPE_LABELS[mealType]}</span>
+          Add to <span className="font-medium text-gray-300">{MEAL_TYPE_LABELS[mealType]}</span>
         </p>
         {suggestedCategories && (
           <span className="text-xs bg-purple-50 text-purple-600 px-2 py-1 rounded-full">
@@ -126,13 +126,13 @@ export default function MealPicker({ meals, mealType, existingEntries, onAdd, on
         <>
           <div className="flex gap-2">
             <div className="relative flex-1">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
               <input
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 placeholder="Search meals..."
                 autoFocus
-                className="w-full pl-8 pr-3 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm"
+                className="w-full pl-8 pr-3 py-2.5 rounded-xl border border-green-800/50 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm bg-[#0f1f0f] text-white placeholder-gray-600"
               />
             </div>
             <button
@@ -147,7 +147,7 @@ export default function MealPicker({ meals, mealType, existingEntries, onAdd, on
 
           <div className="space-y-1.5 max-h-64 overflow-y-auto">
             {filtered.length === 0 && !search ? (
-              <p className="text-center text-gray-400 text-sm py-6">No suggestions — try searching</p>
+              <p className="text-center text-gray-500 text-sm py-6">No suggestions — try searching</p>
             ) : (
               <>
                 {filtered.map(meal => (
@@ -158,9 +158,9 @@ export default function MealPicker({ meals, mealType, existingEntries, onAdd, on
                 {extraResults.length > 0 && (
                   <>
                     <div className="flex items-center gap-2 py-1">
-                      <div className="flex-1 h-px bg-gray-100" />
-                      <span className="text-xs text-gray-400">Other results</span>
-                      <div className="flex-1 h-px bg-gray-100" />
+                      <div className="flex-1 h-px bg-green-900/40" />
+                      <span className="text-xs text-gray-500">Other results</span>
+                      <div className="flex-1 h-px bg-green-900/40" />
                     </div>
                     {extraResults.map(meal => (
                       <MealOption key={meal.id} meal={meal} onAdd={onAdd} muted />
@@ -171,10 +171,10 @@ export default function MealPicker({ meals, mealType, existingEntries, onAdd, on
             )}
           </div>
 
-          <div className="border-t border-gray-100 pt-3">
+          <div className="border-t border-green-900/40 pt-3">
             <button
               onClick={() => setCustomMode(true)}
-              className="w-full flex items-center justify-center gap-1.5 py-2 border border-dashed border-gray-300 text-gray-500 hover:border-green-400 hover:text-green-600 rounded-xl text-sm transition-colors"
+              className="w-full flex items-center justify-center gap-1.5 py-2 border border-dashed border-green-800/50 text-gray-500 hover:border-green-400 hover:text-green-600 rounded-xl text-sm transition-colors"
             >
               <Plus size={14} />
               Add custom item
@@ -189,11 +189,11 @@ export default function MealPicker({ meals, mealType, existingEntries, onAdd, on
             onKeyDown={e => { if (e.key === 'Enter') handleCustomSave() }}
             placeholder="e.g. Leftover khichdi"
             autoFocus
-            className="w-full px-3 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm"
+            className="w-full px-3 py-2.5 rounded-xl border border-green-800/50 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm bg-[#0f1f0f] text-white placeholder-gray-600"
           />
           <div className="flex gap-2">
             <button onClick={() => setCustomMode(false)}
-              className="flex-1 py-2 border border-gray-200 text-gray-600 rounded-xl text-sm hover:bg-gray-50 transition-colors">
+              className="flex-1 py-2 border border-green-800/50 text-gray-400 rounded-xl text-sm hover:bg-green-900/20 transition-colors">
               Back
             </button>
             <button onClick={handleCustomSave} disabled={!customName.trim()}
@@ -213,13 +213,13 @@ function MealOption({ meal, onAdd, muted = false }: { meal: Meal; onAdd: (m: Mea
       onClick={() => onAdd(meal)}
       className={`w-full text-left px-3 py-2.5 rounded-xl border transition-colors ${
         muted
-          ? 'border-gray-100 bg-white hover:border-gray-200 opacity-60'
-          : 'border-gray-100 hover:border-green-300 hover:bg-green-50 bg-white'
+          ? 'border-green-900/40 bg-[#1a2e1a] hover:border-green-800/50 opacity-60'
+          : 'border-green-900/40 hover:border-green-600 hover:bg-green-900/30 bg-[#1a2e1a]'
       }`}
     >
       <div className="flex items-center justify-between">
-        <span className="font-medium text-sm text-[#1a1a1a]">{meal.name}</span>
-        {meal.cuisine && <span className="text-xs text-gray-400">{meal.cuisine}</span>}
+        <span className="font-medium text-sm text-white">{meal.name}</span>
+        {meal.cuisine && <span className="text-xs text-gray-500">{meal.cuisine}</span>}
       </div>
       {meal.calories && (
         <div className="text-xs text-gray-500 mt-0.5">

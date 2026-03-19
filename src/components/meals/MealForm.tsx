@@ -92,22 +92,22 @@ export default function MealForm({ meal, onSaved, onCancel }: MealFormProps) {
   return (
     <form onSubmit={handleSave} className="space-y-4">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Meal name *</label>
+        <label className="block text-sm font-medium text-gray-400 mb-1">Meal name *</label>
         <input
           value={name}
           onChange={e => setName(e.target.value)}
           required
-          className="w-full px-3 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm"
+          className="w-full px-3 py-2.5 rounded-xl border border-green-800/50 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm bg-[#0f1f0f] text-white placeholder-gray-600"
           placeholder="e.g. Palak Paneer"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Cuisine</label>
+        <label className="block text-sm font-medium text-gray-400 mb-1">Cuisine</label>
         <select
           value={cuisine}
           onChange={e => setCuisine(e.target.value as Cuisine)}
-          className="w-full px-3 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm bg-white"
+          className="w-full px-3 py-2.5 rounded-xl border border-green-800/50 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm bg-[#0f1f0f] text-white"
         >
           <option value="">Select cuisine...</option>
           {ALL_CUISINES.map(c => (
@@ -117,18 +117,18 @@ export default function MealForm({ meal, onSaved, onCancel }: MealFormProps) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+        <label className="block text-sm font-medium text-gray-400 mb-1">Description</label>
         <textarea
           value={description}
           onChange={e => setDescription(e.target.value)}
           rows={2}
-          className="w-full px-3 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm resize-none"
+          className="w-full px-3 py-2.5 rounded-xl border border-green-800/50 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm resize-none bg-[#0f1f0f] text-white placeholder-gray-600"
           placeholder="Optional notes"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Nutrition (per serving)</label>
+        <label className="block text-sm font-medium text-gray-400 mb-2">Nutrition (per serving)</label>
         <div className="grid grid-cols-2 gap-2">
           {[
             { label: 'Calories (kcal)', value: calories, set: setCalories },
@@ -138,11 +138,11 @@ export default function MealForm({ meal, onSaved, onCancel }: MealFormProps) {
             { label: 'Fiber (g)',        value: fiber,    set: setFiber },
           ].map(({ label, value, set }) => (
             <div key={label}>
-              <label className="block text-xs text-gray-500 mb-1">{label}</label>
+              <label className="block text-xs text-gray-400 mb-1">{label}</label>
               <input
                 type="number" min="0" value={value}
                 onChange={e => set(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm"
+                className="w-full px-3 py-2 rounded-xl border border-green-800/50 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm bg-[#0f1f0f] text-white placeholder-gray-600"
                 placeholder="0"
               />
             </div>
@@ -151,7 +151,7 @@ export default function MealForm({ meal, onSaved, onCancel }: MealFormProps) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Tags</label>
+        <label className="block text-sm font-medium text-gray-400 mb-2">Tags</label>
         <div className="flex flex-wrap gap-2">
           {DIET_TAGS.map(({ tag, label }) => (
             <button
@@ -160,8 +160,8 @@ export default function MealForm({ meal, onSaved, onCancel }: MealFormProps) {
               onClick={() => toggleTag(tag)}
               className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
                 dietTags.includes(tag)
-                  ? 'bg-green-500 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  ? 'bg-green-600 text-white'
+                  : 'bg-green-900/30 text-gray-400 hover:bg-green-900/50'
               }`}
             >
               {label}
@@ -171,25 +171,25 @@ export default function MealForm({ meal, onSaved, onCancel }: MealFormProps) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Ingredients</label>
+        <label className="block text-sm font-medium text-gray-400 mb-2">Ingredients</label>
         <div className="flex gap-2 mb-2">
           <input
             value={newIngredient}
             onChange={e => setNewIngredient(e.target.value)}
             onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addIngredient() } }}
-            className="flex-1 px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm"
+            className="flex-1 px-3 py-2 rounded-xl border border-green-800/50 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm bg-[#0f1f0f] text-white placeholder-gray-600"
             placeholder="Add ingredient"
           />
-          <button type="button" onClick={addIngredient} className="px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-xl">
+          <button type="button" onClick={addIngredient} className="px-3 py-2 bg-green-900/30 hover:bg-green-900/50 rounded-xl">
             <Plus size={16} />
           </button>
         </div>
         <div className="flex flex-wrap gap-1.5">
           {ingredients.map(ing => (
-            <span key={ing} className="flex items-center gap-1 bg-gray-100 text-gray-700 text-xs px-2.5 py-1 rounded-full">
+            <span key={ing} className="flex items-center gap-1 bg-green-900/30 text-gray-300 text-xs px-2.5 py-1 rounded-full">
               {ing}
               <button type="button" onClick={() => setIngredients(prev => prev.filter(x => x !== ing))}>
-                <X size={12} className="text-gray-400 hover:text-gray-600" />
+                <X size={12} className="text-gray-500 hover:text-gray-300" />
               </button>
             </span>
           ))}
@@ -200,7 +200,7 @@ export default function MealForm({ meal, onSaved, onCancel }: MealFormProps) {
 
       <div className="flex gap-2 pt-2">
         <button type="button" onClick={onCancel}
-          className="flex-1 py-2.5 border border-gray-200 text-gray-600 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors">
+          className="flex-1 py-2.5 border border-green-800/50 text-gray-400 rounded-xl text-sm font-medium hover:bg-green-900/20 transition-colors">
           Cancel
         </button>
         <button type="submit" disabled={saving}

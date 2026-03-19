@@ -161,17 +161,17 @@ export default function WeeklyPlanner({ meals, initialEntries }: WeeklyPlannerPr
       {/* Week navigation */}
       <div className="flex items-center gap-2 mb-4">
         <button onClick={() => setWeekStart(d => addDays(d, -7))}
-          className="p-2 rounded-xl hover:bg-gray-100 transition-colors">
+          className="p-2 rounded-xl hover:bg-green-900/30 transition-colors">
           <ChevronLeft size={18} />
         </button>
         <button
           onClick={() => setWeekStart(startOfWeek(new Date(), { weekStartsOn: 1 }))}
-          className="flex-1 text-center text-sm font-medium text-gray-600 hover:text-green-600 transition-colors"
+          className="flex-1 text-center text-sm font-medium text-gray-400 hover:text-green-600 transition-colors"
         >
           This week
         </button>
         <button onClick={() => setWeekStart(d => addDays(d, 7))}
-          className="p-2 rounded-xl hover:bg-gray-100 transition-colors">
+          className="p-2 rounded-xl hover:bg-green-900/30 transition-colors">
           <ChevronRight size={18} />
         </button>
       </div>
@@ -184,15 +184,15 @@ export default function WeeklyPlanner({ meals, initialEntries }: WeeklyPlannerPr
 
           return (
             <div key={day.toISOString()}
-              className={`bg-white rounded-2xl border shadow-sm overflow-hidden ${isToday ? 'border-green-300' : 'border-gray-100'}`}
+              className={`bg-[#1a2e1a] rounded-2xl border shadow-none overflow-hidden ${isToday ? 'border-green-500' : 'border-green-900/40'}`}
             >
               {/* Day header */}
-              <div className={`px-4 py-2.5 flex items-center justify-between ${isToday ? 'bg-green-50' : 'bg-gray-50'}`}>
+              <div className={`px-4 py-2.5 flex items-center justify-between ${isToday ? 'bg-green-900/50' : 'bg-[#0f1f0f]/40'}`}>
                 <div className="flex items-center gap-2">
-                  <span className={`font-semibold text-sm ${isToday ? 'text-green-700' : 'text-gray-700'}`}>
+                  <span className={`font-semibold text-sm ${isToday ? 'text-green-400' : 'text-gray-300'}`}>
                     {format(day, 'EEEE')}
                   </span>
-                  <span className={`text-xs ${isToday ? 'text-green-500' : 'text-gray-400'}`}>
+                  <span className={`text-xs ${isToday ? 'text-green-500' : 'text-gray-500'}`}>
                     {format(day, 'dd MMM')}
                   </span>
                   {isToday && <span className="text-xs bg-green-500 text-white px-2 py-0.5 rounded-full">Today</span>}
@@ -206,7 +206,7 @@ export default function WeeklyPlanner({ meals, initialEntries }: WeeklyPlannerPr
               </div>
 
               {/* Meal slots */}
-              <div className="divide-y divide-gray-50">
+              <div className="divide-y divide-green-900/30">
                 {MEAL_TYPES.map(mealType => {
                   const slotEntries = getSlotEntries(day, mealType)
 
@@ -214,10 +214,10 @@ export default function WeeklyPlanner({ meals, initialEntries }: WeeklyPlannerPr
                     <div key={mealType} className="px-4 py-2.5">
                       <div className="flex items-center gap-2 mb-1.5">
                         <span className="text-base w-5 text-center">{MEAL_TYPE_EMOJI[mealType]}</span>
-                        <span className="text-xs text-gray-400 font-medium">{MEAL_TYPE_LABEL[mealType]}</span>
+                        <span className="text-xs text-gray-500 font-medium">{MEAL_TYPE_LABEL[mealType]}</span>
                         <button
                           onClick={() => openPicker(day, mealType)}
-                          className="ml-auto p-1 rounded-lg text-gray-300 hover:text-green-500 hover:bg-green-50 transition-colors"
+                          className="ml-auto p-1 rounded-lg text-gray-500 hover:text-green-500 hover:bg-green-900/30 transition-colors"
                         >
                           <Plus size={14} />
                         </button>
@@ -226,7 +226,7 @@ export default function WeeklyPlanner({ meals, initialEntries }: WeeklyPlannerPr
                       {slotEntries.length === 0 ? (
                         <button
                           onClick={() => openPicker(day, mealType)}
-                          className="w-full text-left text-xs text-gray-300 hover:text-green-500 transition-colors pl-7"
+                          className="w-full text-left text-xs text-gray-500 hover:text-green-500 transition-colors pl-7"
                         >
                           + Add item
                         </button>
@@ -235,25 +235,25 @@ export default function WeeklyPlanner({ meals, initialEntries }: WeeklyPlannerPr
                           {slotEntries.map(entry => (
                             <div key={entry.id} className="flex items-center justify-between gap-2">
                               <div className="min-w-0 flex-1">
-                                <span className="text-sm font-medium text-[#1a1a1a] truncate block">
+                                <span className="text-sm font-medium text-white truncate block">
                                   {getItemName(entry)}
                                 </span>
                                 {entry.meal?.calories && (
-                                  <span className="text-xs text-gray-400">{entry.meal.calories} kcal</span>
+                                  <span className="text-xs text-gray-500">{entry.meal.calories} kcal</span>
                                 )}
                               </div>
                               <div className="flex gap-1 shrink-0">
                                 <button
                                   onClick={() => openReplace(entry)}
                                   title="Swap meal"
-                                  className="p-1.5 rounded-lg text-gray-400 hover:text-green-500 hover:bg-green-50 transition-colors"
+                                  className="p-1.5 rounded-lg text-gray-500 hover:text-green-500 hover:bg-green-900/30 transition-colors"
                                 >
                                   <RefreshCw size={12} />
                                 </button>
                                 <button
                                   onClick={() => handleRemoveEntry(entry)}
                                   title="Remove"
-                                  className="p-1.5 rounded-lg text-gray-400 hover:text-red-400 hover:bg-red-50 transition-colors"
+                                  className="p-1.5 rounded-lg text-gray-500 hover:text-red-400 hover:bg-red-50 transition-colors"
                                 >
                                   <X size={12} />
                                 </button>

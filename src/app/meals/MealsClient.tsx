@@ -73,12 +73,12 @@ export default function MealsClient({ initialMeals }: MealsClientProps) {
 
       {/* Search */}
       <div className="relative mb-3">
-        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
         <input
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder="Search meals..."
-          className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-400 text-sm bg-white"
+          className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-green-800/50 focus:outline-none focus:ring-2 focus:ring-green-500 text-sm bg-[#1a2e1a] text-white placeholder-gray-600"
         />
       </div>
 
@@ -87,7 +87,7 @@ export default function MealsClient({ initialMeals }: MealsClientProps) {
         <button
           onClick={() => setSelectedCuisine(null)}
           className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-            !selectedCuisine ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            !selectedCuisine ? 'bg-green-500 text-white' : 'bg-green-900/30 text-gray-400 hover:bg-green-900/40'
           }`}
         >
           All
@@ -97,7 +97,7 @@ export default function MealsClient({ initialMeals }: MealsClientProps) {
             key={cuisine}
             onClick={() => setSelectedCuisine(selectedCuisine === cuisine ? null : cuisine)}
             className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-              selectedCuisine === cuisine ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              selectedCuisine === cuisine ? 'bg-green-500 text-white' : 'bg-green-900/30 text-gray-400 hover:bg-green-900/40'
             }`}
           >
             {CUISINE_EMOJI[cuisine!] ?? ''} {cuisine}
@@ -107,19 +107,19 @@ export default function MealsClient({ initialMeals }: MealsClientProps) {
 
       {/* Meal grid */}
       {filtered.length === 0 ? (
-        <div className="text-center py-16 text-gray-400">
+        <div className="text-center py-16 text-gray-500">
           <div className="text-4xl mb-3">🥗</div>
           <p className="font-medium">{search || selectedCuisine ? 'No meals match your filter' : 'No meals yet'}</p>
         </div>
       ) : (
         <div className="grid gap-3 sm:grid-cols-2">
           {filtered.map(meal => (
-            <div key={meal.id} className="bg-white rounded-2xl border border-gray-100 p-4 shadow-sm">
+            <div key={meal.id} className="bg-[#1a2e1a] rounded-2xl border border-green-900/40 p-4 shadow-none">
               <div className="flex items-start justify-between mb-1">
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-[#1a1a1a] truncate">{meal.name}</h3>
+                  <h3 className="font-semibold text-white truncate">{meal.name}</h3>
                   {meal.cuisine && (
-                    <span className="text-xs text-gray-400">
+                    <span className="text-xs text-gray-500">
                       {CUISINE_EMOJI[meal.cuisine] ?? ''} {meal.cuisine}
                     </span>
                   )}
@@ -127,13 +127,13 @@ export default function MealsClient({ initialMeals }: MealsClientProps) {
                 <div className="flex gap-1 ml-2 shrink-0">
                   <button
                     onClick={() => { setEditingMeal(meal); setModalOpen(true) }}
-                    className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
+                    className="p-1.5 text-gray-500 hover:text-gray-300 hover:bg-green-900/20 rounded-lg transition-colors"
                   >
                     <Pencil size={14} />
                   </button>
                   <button
                     onClick={() => handleDelete(meal)}
-                    className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                    className="p-1.5 text-gray-500 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                   >
                     <Trash2 size={14} />
                   </button>
@@ -152,7 +152,7 @@ export default function MealsClient({ initialMeals }: MealsClientProps) {
               {meal.diet_tags.length > 0 && (
                 <div className="flex flex-wrap gap-1 mt-2">
                   {meal.diet_tags.map(tag => (
-                    <span key={tag} className="px-2 py-0.5 bg-green-50 text-green-700 text-xs rounded-full">{tag}</span>
+                    <span key={tag} className="px-2 py-0.5 bg-green-900/30 text-green-400 text-xs rounded-full">{tag}</span>
                   ))}
                 </div>
               )}
