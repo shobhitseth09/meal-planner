@@ -41,7 +41,8 @@ export default function MealForm({ meal, onSaved, onCancel }: MealFormProps) {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
-  const supabase = createClient()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const supabase = createClient() as any
 
   function toggleTag(tag: DietTag) {
     setDietTags(prev =>

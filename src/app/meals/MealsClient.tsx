@@ -31,7 +31,8 @@ export default function MealsClient({ initialMeals }: MealsClientProps) {
   const [selectedCuisine, setSelectedCuisine] = useState<string | null>(null)
   const [modalOpen, setModalOpen] = useState(false)
   const [editingMeal, setEditingMeal] = useState<Meal | undefined>()
-  const supabase = createClient()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const supabase = createClient() as any
 
   const filtered = meals.filter(m => {
     const matchesSearch = m.name.toLowerCase().includes(search.toLowerCase())

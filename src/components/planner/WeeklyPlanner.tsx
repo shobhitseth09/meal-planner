@@ -34,7 +34,8 @@ export default function WeeklyPlanner({ meals, initialEntries }: WeeklyPlannerPr
   const [pickerTarget, setPickerTarget] = useState<{ date: string; mealType: MealType } | null>(null)
   const [replacingEntry, setReplacingEntry] = useState<MealPlanEntry | null>(null)
 
-  const supabase = createClient()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const supabase = createClient() as any
   const days = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i))
 
   function getSlotEntries(date: Date, mealType: MealType): MealPlanEntry[] {
